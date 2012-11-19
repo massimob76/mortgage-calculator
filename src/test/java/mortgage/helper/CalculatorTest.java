@@ -39,4 +39,17 @@ public class CalculatorTest {
 		assertEquals(expected, actual);
 	}
 	
+	@Test
+	public void calculateResidualBorrowingForSameDay() {
+		double expected = 10000;
+		double actual = calculateResidualBorrowing(10000, 5.00f, 0);
+		assertEquals(expected, actual, 0);
+	}
+	
+	@Test
+	public void calculateResidualBorrowingAfterOneYear() {
+		double expected = 10512.67;
+		double actual = calculateResidualBorrowing(10000, 5.00f, 365);
+		assertEquals(expected, actual, 0.05);
+	}
 }
