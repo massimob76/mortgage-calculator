@@ -21,5 +21,14 @@ public class Borrower {
 	public void addShare(double share) {
 		this.share += share;
 	}
+	
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("name: ");
+		sb.append(name);
+		sb.append(", share: ");
+		sb.append(String.format("%.2f", share));
+		return sb.toString();
+	}
 
 }
