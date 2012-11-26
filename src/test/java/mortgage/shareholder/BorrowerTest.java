@@ -1,6 +1,8 @@
-package mortgage.partecipant;
+package mortgage.shareholder;
 
 import static org.junit.Assert.*;
+
+import mortgage.shareholder.Borrower;
 
 import org.junit.Test;
 

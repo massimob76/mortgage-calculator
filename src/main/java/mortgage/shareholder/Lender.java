@@ -1,16 +1,18 @@
-package mortgage.partecipant;
+package mortgage.shareholder;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import mortgage.helper.Calculator;
 
-public class Lender {
+public class Lender implements Shareholder {
 	
 	private final String name;
 	private float annualInterestRate;
 	private Calendar timestamp;
 	private double borrowing;
 	private double share;
+	private static final SimpleDateFormat TIMESTAMP_FORMATTER = new SimpleDateFormat("MMMMMMMMMMMM d, yyyy");
 	
 	public Lender(Calendar timestamp, String name, float annualInterestRate, double borrowing, double share) {
 		this.timestamp = timestamp;
@@ -50,6 +52,22 @@ public class Lender {
 	
 	public double getShare() {
 		return share;
+	}
+	
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("timestamp: ");
+		sb.append(TIMESTAMP_FORMATTER.format(timestamp.getTime()));
+		sb.append(", name: ");
+		sb.append(name);
+		sb.append(", annual interest rate: ");
+		sb.append(String.format("%.2f", annualInterestRate));
+		sb.append("%, borrowing: ");
+		sb.append(String.format("%.2f", borrowing));
+		sb.append(", share: ");
+		sb.append(String.format("%.2f", share));
+		return sb.toString();
+
 	}
 	
 	private double updateAndReturnBoughtShares(double paidInAmount) {

@@ -1,6 +1,6 @@
-package mortgage.partecipant;
+package mortgage.shareholder;
 
-public class Borrower {
+public class Borrower implements Shareholder {
 	
 	private final String name;
 	private double share;
