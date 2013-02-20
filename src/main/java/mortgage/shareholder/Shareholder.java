@@ -1,6 +1,6 @@
 package mortgage.shareholder;
 
-interface Shareholder {
+public interface Shareholder {
 	
 	public String getName();
 	

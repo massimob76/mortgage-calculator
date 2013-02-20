@@ -1,4 +1,4 @@
-package mortgage.shareholder;
+package mortgage;
 
 import static org.junit.Assert.*;
 
@@ -8,18 +8,18 @@ import java.util.LinkedList;
 
 import junitx.util.PrivateAccessor;
 
+import mortgage.Snapshot;
+import mortgage.Snapshot.Operation;
 import mortgage.shareholder.Borrower;
 import mortgage.shareholder.Lender;
 import mortgage.shareholder.Shareholder;
-import mortgage.shareholder.Shareholders;
-import mortgage.shareholder.Shareholders.Operation;
 
 import org.junit.Before;
 import org.junit.Test;
 
-public class ShareHoldersTest {
+public class SnapshotTest {
 	
-	private Shareholders shareholders;
+	private Snapshot snapshot;
 	private Shareholder borrowerMassimo = new Borrower("Massimo", 20.00);
 	private Shareholder borrowerMassimoUpdate = new Borrower("Massimo", 30.00);
 	private Shareholder borrowerPaula = new Borrower("Paula", 10.00);
@@ -29,14 +29,14 @@ public class ShareHoldersTest {
     
     @Before
     public void setUp() throws ParseException {
-    	shareholders = new Shareholders();
+    	snapshot = new Snapshot();
     }
 	
     
     @SuppressWarnings("unchecked")
     @Test
     public void addShareholder() throws NoSuchFieldException {
-    	Operation operation = new Shareholders.Operation();
+    	Operation operation = new Snapshot.Operation();
     	operation.add(borrowerMassimo);
     	LinkedList<Shareholder> toBeAdded = (LinkedList<Shareholder>)PrivateAccessor.getField(operation, "toBeAdded");
     	assertEquals(borrowerMassimo, toBeAdded.pop());
@@ -45,7 +45,7 @@ public class ShareHoldersTest {
     @SuppressWarnings("unchecked")
     @Test
     public void updateShareholder() throws NoSuchFieldException {
-    	Operation operation = new Shareholders.Operation();
+    	Operation operation = new Snapshot.Operation();
     	operation.update(borrowerMassimo);
     	LinkedList<Shareholder> toBeUpdated = (LinkedList<Shareholder>)PrivateAccessor.getField(operation, "toBeUpdated");
     	assertEquals(borrowerMassimo, toBeUpdated.pop());
@@ -54,7 +54,7 @@ public class ShareHoldersTest {
     @SuppressWarnings("unchecked")
     @Test
     public void removeShareholder() throws NoSuchFieldException {
-    	Operation operation = new Shareholders.Operation();
+    	Operation operation = new Snapshot.Operation();
     	operation.remove(borrowerMassimo);
     	LinkedList<Shareholder> toBeRemoved = (LinkedList<Shareholder>)PrivateAccessor.getField(operation, "toBeRemoved");
     	assertEquals(borrowerMassimo, toBeRemoved.pop());
@@ -64,7 +64,7 @@ public class ShareHoldersTest {
     @Test
     public void getShareholderByName() {
     	commitSetUpOperation();
-    	Shareholder actual = shareholders.getShareholderByName("Massimo");
+    	Shareholder actual = snapshot.getShareholderByName("Massimo");
     	assertEquals(borrowerMassimo, actual);
     }
     
@@ -72,32 +72,32 @@ public class ShareHoldersTest {
     @Test(expected=IllegalArgumentException.class)
     public void getShareholderByNameThrowsAnExceptionWhenShareholderDoesNotExist() {
     	commitSetUpOperation();
-    	shareholders.getShareholderByName("Not existent shareholder");
+    	snapshot.getShareholderByName("Not existent shareholder");
     }
     
     @Test
     public void commitAddsTheListOfShareholders() {
     	commitSetUpOperation();
-    	assertEquals(borrowerMassimo, shareholders.getShareholderByName("Massimo"));
-    	assertEquals(borrowerPaula, shareholders.getShareholderByName("Paula"));
-    	assertEquals(lender, shareholders.getShareholderByName("Yorkshire BS"));
+    	assertEquals(borrowerMassimo, snapshot.getShareholderByName("Massimo"));
+    	assertEquals(borrowerPaula, snapshot.getShareholderByName("Paula"));
+    	assertEquals(lender, snapshot.getShareholderByName("Yorkshire BS"));
     }
     
     @Test
     public void commitUpdatesTheListOfShareholders() {
     	commitSetUpOperation();
     	commitUpdateOperation();
-    	assertEquals(borrowerMassimoUpdate, shareholders.getShareholderByName("Massimo"));
-    	assertEquals(borrowerPaula, shareholders.getShareholderByName("Paula"));
-    	assertEquals(lenderUpdate, shareholders.getShareholderByName("Yorkshire BS"));
+    	assertEquals(borrowerMassimoUpdate, snapshot.getShareholderByName("Massimo"));
+    	assertEquals(borrowerPaula, snapshot.getShareholderByName("Paula"));
+    	assertEquals(lenderUpdate, snapshot.getShareholderByName("Yorkshire BS"));
     }
     
     @Test
     public void commitUpdateAndDeletesTheListOfShareholders() {
     	commitSetUpOperation();
     	commitUpdateAndDeleteOperation();
-    	assertEquals(borrowerMassimoUpdate, shareholders.getShareholderByName("Massimo"));
-    	assertEquals(lender, shareholders.getShareholderByName("Yorkshire BS"));
+    	assertEquals(borrowerMassimoUpdate, snapshot.getShareholderByName("Massimo"));
+    	assertEquals(lender, snapshot.getShareholderByName("Yorkshire BS"));
     }
     
     @Test
@@ -108,17 +108,28 @@ public class ShareHoldersTest {
     		fail();
     		
     	} catch(AssertionError e) {
-    		assertEquals(borrowerMassimo, shareholders.getShareholderByName("Massimo"));
-    		assertEquals(borrowerPaula, shareholders.getShareholderByName("Paula"));
-    		assertEquals(lender, shareholders.getShareholderByName("Yorkshire BS"));
+    		assertEquals(borrowerMassimo, snapshot.getShareholderByName("Massimo"));
+    		assertEquals(borrowerPaula, snapshot.getShareholderByName("Paula"));
+    		assertEquals(lender, snapshot.getShareholderByName("Yorkshire BS"));
     	}
+    }
+    
+    @Test
+    public void toStringReturnsANicelyFormattedRepresentationOfTheCurrentBorrowings() {
+    	commitSetUpOperation();
+    	String expected = 
+    			"timestamp: February 20, 2013, name: Yorkshire BS, annual interest rate: 3.00%, borrowing: 10000.00, share: 70.00\n" +
+                "name: Massimo, share: 20.00\n" +
+    			"name: Paula, share: 10.00\n";
+    	String actual = snapshot.toString();
+    	assertEquals(expected, actual);
     }
 
 
 	private void commitWithOddSharesOperation() {
 		Operation op = new Operation();
 		op.update(borrowerMassimoUpdate);
-    	shareholders.commit(op);
+    	snapshot.commit(op);
 	}
 
 
@@ -127,20 +138,20 @@ public class ShareHoldersTest {
     	op.add(borrowerMassimo);
     	op.add(borrowerPaula);
     	op.add(lender);
-    	shareholders.commit(op);
+    	snapshot.commit(op);
 	}
 
 	private void commitUpdateOperation() {
 		Operation op = new Operation();
 		op.update(borrowerMassimoUpdate);
 		op.update(lenderUpdate);
-		shareholders.commit(op);
+		snapshot.commit(op);
 	}
 
 	private void commitUpdateAndDeleteOperation() {
 		Operation op = new Operation();
 		op.update(borrowerMassimoUpdate);
 		op.remove(borrowerPaula);
-		shareholders.commit(op);
+		snapshot.commit(op);
 	}
 }

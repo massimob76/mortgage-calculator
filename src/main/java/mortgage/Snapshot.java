@@ -1,4 +1,4 @@
-package mortgage.shareholder;
+package mortgage;
 
 import static org.junit.Assert.assertEquals;
 
@@ -7,7 +7,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class Shareholders {
+import mortgage.shareholder.Shareholder;
+
+public class Snapshot {
 	
 	private Map<String, Shareholder> shareholders = new HashMap<String, Shareholder>();
 	private Map<String, Shareholder> shareholdersClone = new HashMap<String, Shareholder>();
@@ -50,6 +52,16 @@ public class Shareholders {
 		updateShareholders(operation.toBeUpdated);
 		removeShareholders(operation.toBeRemoved);
 		verifyAndCopyClones();
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		for (String name: shareholders.keySet()) {
+			sb.append(shareholders.get(name));
+			sb.append("\n");
+		}
+		return sb.toString();
 	}
 	
 	private void resetClones() {
