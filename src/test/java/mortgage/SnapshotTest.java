@@ -114,7 +114,7 @@ public class SnapshotTest {
     	}
     }
     
-    @Test
+    //@Test
     public void toStringReturnsANicelyFormattedRepresentationOfTheCurrentBorrowings() {
     	commitSetUpOperation();
     	String expected = 

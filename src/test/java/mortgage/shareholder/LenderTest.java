@@ -15,97 +15,88 @@ public class LenderTest {
 	@Test
 	public void setTimestampSetTheCorrectBorrowingOnSameDay() {
 		Calendar cal = Calendar.getInstance();
-		double expectedBorrowing = 10000;
-		Lender lender = new Lender(cal, "my bank", 1.00f, expectedBorrowing, 100);
-		lender.setTimestamp(cal);
-		double actualBorrowing = lender.getBorrowing();
-		assertEquals(expectedBorrowing, actualBorrowing, 0);
+		Lender lender = new Lender(cal, "my bank", 1.00f, 10000, 100);
+		
+		Lender expected = new Lender(cal, "my bank", 1.00f, 10000, 100);
+		Lender actual = lender.setTimestamp(cal);
+		assertEquals(expected, actual);
 	}
 	
 	@Test
 	public void setTimestampSetTheCorrectBorrowingAfterOneDay() throws ParseException {
-		double borrowing = 10000;
-		double expectedBorrowing = 10000.27;
-		Lender lender = new Lender(date("November 17, 2012 6:00:00pm"), "my bank", 1.00f, borrowing, 100);
-		lender.setTimestamp(date("November 18, 2012 6:00:00pm"));
-		double actualBorrowing = lender.getBorrowing();
-		assertEquals(expectedBorrowing, actualBorrowing, 0.005);
+		Lender lender = new Lender(date("November 17, 2012 6:00:00pm"), "my bank", 1.00f, 10000, 100);
+		
+		Lender expected = new Lender(date("November 18, 2012 6:00:00pm"), "my bank", 1.00f, 10000.27, 100);
+		Lender actual = lender.setTimestamp(date("November 18, 2012 6:00:00pm"));
+		assertEquals(expected, actual);
 	}
 	
 	@Test
 	public void setTimestampSetTheCorrectBorrowingAfterOneYear() throws ParseException {
-		double borrowing = 10000;
-		double expectedBorrowing = 10100.50;
-		Lender lender = new Lender(date("November 17, 2012 6:00:00pm"), "my bank", 1.00f, borrowing, 100);
-		lender.setTimestamp(date("November 17, 2013 6:00:00pm"));
-		double actualBorrowing = lender.getBorrowing();
-		assertEquals(expectedBorrowing, actualBorrowing, 0.005);
+		Lender lender = new Lender(date("November 17, 2012 6:00:00pm"), "my bank", 1.00f, 10000, 100);
+		
+		Lender expected = new Lender(date("November 17, 2013 6:00:00pm"), "my bank", 1.00f, 10100.50, 100);
+		Lender actual = lender.setTimestamp(date("November 17, 2013 6:00:00pm"));
+		assertEquals(expected, actual);
 	}
 	
 	@Test
 	public void setInterestRateUpdateCorrectBorrowing() throws ParseException {
-		double borrowing = 10000;
-		Lender lender = new Lender(date("November 17, 2012 6:00:00pm"), "my bank", 1.00f, borrowing, 100);
-		lender.setInterestRate(date("November 17, 2013 6:00:00pm"), 2.00f);
-		double actualBorrowing = lender.getBorrowing();
-		double expectedBorrowing = 10100.50;
-		assertEquals(expectedBorrowing, actualBorrowing, 0.005);
+		Lender lender = new Lender(date("November 17, 2012 6:00:00pm"), "my bank", 1.00f, 10000, 100);
+		
+		Lender expected = new Lender(date("November 17, 2013 6:00:00pm"), "my bank", 2.00f, 10100.50, 100);
+		Lender actual = lender.setInterestRate(date("November 17, 2013 6:00:00pm"), 2.00f);
+		assertEquals(expected, actual);
 	}
 	
 	@Test
 	public void setInterestRateLeadToCorrectBorrowingAfterTwoYears() throws ParseException {
-		double borrowing = 10000;
-		Lender lender = new Lender(date("November 17, 2012 6:00:00pm"), "my bank", 1.00f, borrowing, 100);
-		lender.setInterestRate(date("November 17, 2013 6:00:00pm"), 2.00f);
-		lender.setTimestamp(date("November 17, 2014 6:00:00pm"));
-		double actualBorrowing = lender.getBorrowing();
-		double expectedBorrowing = 10304.54;
-		assertEquals(expectedBorrowing, actualBorrowing, 0.005);
+		Lender lender = new Lender(date("November 17, 2012 6:00:00pm"), "my bank", 1.00f, 10000, 100);
+		
+		Lender expected = new Lender(date("November 17, 2014 6:00:00pm"), "my bank", 2.00f, 10304.54, 100);
+		Lender newInterestLender = lender.setInterestRate(date("November 17, 2013 6:00:00pm"), 2.00f);
+		Lender actual = newInterestLender.setTimestamp(date("November 17, 2014 6:00:00pm"));
+		assertEquals(expected, actual);
 	}
 	
 	@Test
 	public void payInReturnsRightNumberOfSharesAndBorrowingAfterZeroDays() throws ParseException {
 		double borrowing = 10000;
 		Lender lender = new Lender(date("November 17, 2012 6:00:00pm"), "my bank", 1.00f, borrowing, 100);
-		double expectedShares = 50;
-		double actualShares = lender.payIn(date("November 17, 2012 6:00:00pm"), 5000);
-		assertEquals(expectedShares, actualShares, 0.01);
-		double expectedBorrowing = 5000;
-		double actualBorrowing = lender.getBorrowing();
-		assertEquals(expectedBorrowing, actualBorrowing, 0.005);
+		
+		Lender expected = new Lender(date("November 17, 2012 6:00:00pm"), "my bank", 1.00f, 5000, 50);
+		Lender actual = lender.payIn(date("November 17, 2012 6:00:00pm"), 5000);
+		assertEquals(expected, actual);
 	}
 	
 	@Test
 	public void payInReturnsRightNumberOfSharesAndBorrowingAfterOneYear() throws ParseException {
-		double borrowing = 10000;
-		Lender lender = new Lender(date("November 17, 2012 6:00:00pm"), "my bank", 1.00f, borrowing, 100);
-		double expectedShares = 49.50;
-		double actualShares = lender.payIn(date("November 17, 2013 6:00:00pm"), 5000);
-		assertEquals(expectedShares, actualShares, 0.01);
-		double expectedBorrowing = 5100.50;
-		double actualBorrowing = lender.getBorrowing();
-		assertEquals(expectedBorrowing, actualBorrowing, 0.005);
+		Lender lender = new Lender(date("November 17, 2012 6:00:00pm"), "my bank", 1.00f, 10000, 100);
+		
+		Lender expected = new Lender(date("November 17, 2013 6:00:00pm"), "my bank", 1.00f, 5100.50, 50.50);
+		Lender actual = lender.payIn(date("November 17, 2013 6:00:00pm"), 5000);
+		assertEquals(expected, actual);
 	}
 	
 	@Test
 	public void mixedJourney() throws ParseException {
-		double shares;
 		Lender lender = new Lender(date("January 1, 2012 6:00:00pm"), "my bank", 20.00f, 100000, 100);
 		
-		shares = lender.payIn(date("February 1, 2012 6:00:00pm"), 1000);
-		assertEquals(100712.67, lender.getBorrowing(), 0.005);
-		assertEquals(0.98, shares, 0.005);		
+		Lender expected = new Lender(date("February 1, 2012 6:00:00pm"), "my bank", 20.00f, 100712.67, 99.02);
+		lender = lender.payIn(date("February 1, 2012 6:00:00pm"), 1000);
+		assertEquals(expected, lender);
 		
-		lender.setTimestamp(date("March 1, 2012 6:00:00pm"));
-		assertEquals(102325.37, lender.getBorrowing(), 0.005);
+		expected = new Lender(date("March 1, 2012 6:00:00pm"), "my bank", 20.00f, 102325.37, 99.02);
+		lender = lender.setTimestamp(date("March 1, 2012 6:00:00pm"));
+		assertEquals(expected, lender);
 		
-		lender.setInterestRate(date("April 1, 2012 6:00:00pm"), 30.00f);
-		assertEquals(104077.86, lender.getBorrowing(), 0.005);
+		expected = new Lender(date("April 1, 2012 6:00:00pm"), "my bank", 30.00f, 104077.86, 99.02);
+		lender = lender.setInterestRate(date("April 1, 2012 6:00:00pm"), 30.00f);
+		assertEquals(expected, lender);
 		
-		shares = lender.payIn(date("May 1, 2012 6:00:00pm"), 1000);
-		assertEquals(105674.98, lender.getBorrowing(), 0.005);
-		assertEquals(0.93, shares, 0.005);		
-		
+		expected = new Lender(date("May 1, 2012 6:00:00pm"), "my bank", 30.00f, 105674.98, 98.09);
+		lender = lender.payIn(date("May 1, 2012 6:00:00pm"), 1000);
+		assertEquals(expected, lender);		
 	}
 	
 	@Test

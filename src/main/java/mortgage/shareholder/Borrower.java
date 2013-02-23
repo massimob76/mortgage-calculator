@@ -3,7 +3,7 @@ package mortgage.shareholder;
 public class Borrower implements Shareholder {
 	
 	private final String name;
-	private double share;
+	private final double share;
 	
 	public Borrower(String name, double share) {
 		this.name = name;
@@ -18,10 +18,11 @@ public class Borrower implements Shareholder {
 		return share;
 	}
 	
-	public void addShare(double share) {
-		this.share += share;
+	public Borrower addShare(double share) {
+		return new Borrower(this.name, this.share + share);
 	}
 	
+	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("name: ");
@@ -29,6 +30,15 @@ public class Borrower implements Shareholder {
 		sb.append(", share: ");
 		sb.append(String.format("%.2f", share));
 		return sb.toString();
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof Borrower) {
+			Borrower borrower = (Borrower)o;
+			return (borrower.name == this.name && borrower.share == this.share);
+		}
+		return false;
 	}
 
 }
