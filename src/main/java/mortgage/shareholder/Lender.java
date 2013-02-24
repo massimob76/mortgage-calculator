@@ -12,10 +12,10 @@ public class Lender implements Shareholder {
 	private static final SimpleDateFormat TIMESTAMP_FORMATTER = new SimpleDateFormat("MMMMMMMMMMMM d, yyyy");
 	
 	private final String name;
-	private final float annualInterestRate;
+	private float annualInterestRate;
 	private final Calendar timestamp;
-	private final double borrowing;
-	private final double share;
+	private double borrowing;
+	private double share;
 	
 	public Lender(Calendar timestamp, String name, float annualInterestRate, double borrowing, double share) {
 		this.timestamp = timestamp;
@@ -30,16 +30,14 @@ public class Lender implements Shareholder {
 		return new Lender(timestamp, name, annualInterestRate, borrowing, share);
 	}
 	
-	public Lender setInterestRate(Calendar timestamp, float annualInterestRate) {
-		double borrowing = calculateUpdatedBorrowing(timestamp);
-		return new Lender(timestamp, name, annualInterestRate, borrowing, share);
+	public void setInterestRate(float annualInterestRate) {
+		this.annualInterestRate = annualInterestRate;
 	}
 	
-	public Lender payIn(Calendar timestamp, double amount) {
-		double borrowing = calculateUpdatedBorrowing(timestamp); 
-		if (borrowing >= amount) {
-			double updatedShares = calculateUpdatedShares(amount, borrowing);
-			return new Lender(timestamp, name, annualInterestRate, borrowing - amount, updatedShares);
+	public void payIn(double amount) {
+		if (this.borrowing >= amount) {
+			this.share = calculateUpdatedShares(amount, borrowing);
+			this.borrowing -= amount;
 		} else {
 			throw new IllegalPayInAmount("amount cannot be higher than residual borrowing", amount, borrowing);
 		}

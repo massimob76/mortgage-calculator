@@ -12,16 +12,16 @@ public class Borrower implements Shareholder {
 		this.share = share;
 	}
 	
+	public Borrower addShare(double share) {
+		return new Borrower(this.name, this.share + share);
+	}
+	
 	public String getName() {
 		return name;
 	}
 	
 	public double getShare() {
 		return share;
-	}
-	
-	public Borrower addShare(double share) {
-		return new Borrower(this.name, this.share + share);
 	}
 	
 	@Override
