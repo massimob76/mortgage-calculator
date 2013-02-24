@@ -1,5 +1,7 @@
 package mortgage.shareholder;
 
+import static mortgage.helper.Comparison.same;
+
 public class Borrower implements Shareholder {
 	
 	private final String name;
@@ -36,7 +38,7 @@ public class Borrower implements Shareholder {
 	public boolean equals(Object o) {
 		if (o instanceof Borrower) {
 			Borrower borrower = (Borrower)o;
-			return (borrower.name == this.name && borrower.share == this.share);
+			return (borrower.name == this.name && same(borrower.share, this.share));
 		}
 		return false;
 	}

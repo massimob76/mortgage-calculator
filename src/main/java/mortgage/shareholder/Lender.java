@@ -5,10 +5,11 @@ import java.util.Calendar;
 
 import mortgage.helper.Calculator;
 
+import static mortgage.helper.Comparison.same;
+
 public class Lender implements Shareholder {
 	
 	private static final SimpleDateFormat TIMESTAMP_FORMATTER = new SimpleDateFormat("MMMMMMMMMMMM d, yyyy");
-	private static final float DOUBLE_TOLERANCE = 0.005f;
 	
 	private final String name;
 	private final float annualInterestRate;
@@ -92,11 +93,6 @@ public class Lender implements Shareholder {
 		int daysDifference = Calculator.calculateDifferenceInDays(updatedTimestamp, timestamp);
 		double borrowing = Calculator.calculateResidualBorrowing(this.borrowing, annualInterestRate, daysDifference);
 		return borrowing;
-	}
-	
-	private static boolean same(double a, double b) {
-		double diff = a - b;
-		return - DOUBLE_TOLERANCE < diff && diff < DOUBLE_TOLERANCE;
 	}
 	
 	@SuppressWarnings("serial")
