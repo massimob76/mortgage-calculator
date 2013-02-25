@@ -1,11 +1,11 @@
 package mortgage.shareholder;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 import mortgage.helper.Calculator;
 
 import static mortgage.helper.Comparison.same;
+import static org.junit.Assert.assertTrue;
 
 public class Lender implements Shareholder {
 	
@@ -13,21 +13,20 @@ public class Lender implements Shareholder {
 	
 	private final String name;
 	private float annualInterestRate;
-	private final Calendar timestamp;
 	private double borrowing;
 	private double share;
 	
-	public Lender(Calendar timestamp, String name, float annualInterestRate, double borrowing, double share) {
-		this.timestamp = timestamp;
+	public Lender(String name, float annualInterestRate, double borrowing, double share) {
 		this.name = name;
 		this.annualInterestRate = annualInterestRate;
 		this.borrowing = borrowing;
 		this.share = share;
 	}
 	
-	public Lender setTimestamp(Calendar timestamp) {
-		double borrowing = calculateUpdatedBorrowing(timestamp);
-		return new Lender(timestamp, name, annualInterestRate, borrowing, share);
+	public Lender moveTimeline(int daysShift) {
+		assertTrue(daysShift >= 0);
+		double borrowing = Calculator.calculateResidualBorrowing(this.borrowing, annualInterestRate, daysShift);
+		return new Lender(name, annualInterestRate, borrowing, share);
 	}
 	
 	public void setInterestRate(float annualInterestRate) {
@@ -57,9 +56,7 @@ public class Lender implements Shareholder {
 	
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("timestamp: ");
-		sb.append(TIMESTAMP_FORMATTER.format(timestamp.getTime()));
-		sb.append(", name: ");
+		sb.append("name: ");
 		sb.append(name);
 		sb.append(", annual interest rate: ");
 		sb.append(String.format("%.2f", annualInterestRate));
@@ -75,9 +72,8 @@ public class Lender implements Shareholder {
 	public boolean equals(Object o) {
 		if (o instanceof Lender) {
 			Lender lender = (Lender)o;
-			return (lender.timestamp.equals(timestamp) && lender.name.equals(name)
-					&& lender.annualInterestRate == annualInterestRate && same(lender.borrowing, borrowing)
-					&& same(lender.share, share));
+			return (lender.name.equals(name) && lender.annualInterestRate == annualInterestRate 
+					&& same(lender.borrowing, borrowing) && same(lender.share, share));
 		}
 		return false;
 	}
@@ -87,11 +83,11 @@ public class Lender implements Shareholder {
 		return updatedShare;
 	}
 	
-	private double calculateUpdatedBorrowing(Calendar updatedTimestamp) {
-		int daysDifference = Calculator.calculateDifferenceInDays(updatedTimestamp, timestamp);
-		double borrowing = Calculator.calculateResidualBorrowing(this.borrowing, annualInterestRate, daysDifference);
-		return borrowing;
-	}
+//	private double calculateUpdatedBorrowing(Calendar updatedTimestamp) {
+//		int daysDifference = Calculator.calculateDifferenceInDays(updatedTimestamp, timestamp);
+//		double borrowing = Calculator.calculateResidualBorrowing(this.borrowing, annualInterestRate, daysDifference);
+//		return borrowing;
+//	}
 	
 	@SuppressWarnings("serial")
 	private static class IllegalPayInAmount extends RuntimeException {

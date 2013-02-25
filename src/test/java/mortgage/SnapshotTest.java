@@ -23,8 +23,8 @@ public class SnapshotTest {
 	private Shareholder borrowerMassimo = new Borrower("Massimo", 20.00);
 	private Shareholder borrowerMassimoUpdate = new Borrower("Massimo", 30.00);
 	private Shareholder borrowerPaula = new Borrower("Paula", 10.00);
-    private	Shareholder lender = new Lender(Calendar.getInstance(), "Yorkshire BS", 3.0f, 10000.00, 70.00);
-    private	Shareholder lenderUpdate = new Lender(Calendar.getInstance(), "Yorkshire BS", 3.0f, 10000.00, 60.00);
+    private	Shareholder lender = new Lender("Yorkshire BS", 3.0f, 10000.00, 70.00);
+    private	Shareholder lenderUpdate = new Lender("Yorkshire BS", 3.0f, 10000.00, 60.00);
 
     
     @Before
