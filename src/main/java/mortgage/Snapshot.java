@@ -1,120 +1,65 @@
 package mortgage;
 
-import static org.junit.Assert.assertEquals;
+import static mortgage.helper.Comparison.same;
 
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import mortgage.shareholder.Shareholder;
 
 public class Snapshot {
 	
-	private Map<String, Shareholder> shareholders = new HashMap<String, Shareholder>();
-	private Map<String, Shareholder> shareholdersClone = new HashMap<String, Shareholder>();
+	private static final SimpleDateFormat TIMESTAMP_FORMATTER = new SimpleDateFormat("MMMMMMMMMMMM d, yyyy");
 	
-
-	public static class Operation {
-		
-		private List<Shareholder> toBeAdded = new LinkedList<Shareholder>();
-		private List<Shareholder> toBeUpdated = new LinkedList<Shareholder>();
-		private List<Shareholder> toBeRemoved = new LinkedList<Shareholder>();
-		
-		public void add(Shareholder shareholder) {
-			toBeAdded.add(shareholder);
-		}
-		
-		public void update(Shareholder shareholder) {
-			toBeUpdated.add(shareholder);
-		}
-		
-		public void remove(Shareholder shareholder) {
-			toBeRemoved.add(shareholder);
-		}
-		
-	}
+	private final Calendar timestamp;
+	private final List<Shareholder> shareholders;
 	
 	
+    public Snapshot(Calendar timestamp, List<Shareholder> shareholders) {
+    	verifyShareholders(shareholders);
+    	this.timestamp = timestamp;
+    	this.shareholders = shareholders;
+    }
+    
+    public Calendar getTimestamp() {
+    	return timestamp;
+    }
+    
 	public Shareholder getShareholderByName(String name) {
-		Shareholder shareholder = shareholders.get(name);
-		if (shareholder == null) {
-			throw new IllegalArgumentException("Could not find shareholder with name: " + name);
-		} else {
-			return shareholder;
+		for (Shareholder shareholder: shareholders) {
+			if (shareholder.getName() == name) {
+				return shareholder;
+			}
 		}
+		throw new IllegalArgumentException("Could not find shareholder with name: " + name);
 	}
 
-	
-	public void commit(Operation operation) {
-		resetClones();
-		addShareholders(operation.toBeAdded);
-		updateShareholders(operation.toBeUpdated);
-		removeShareholders(operation.toBeRemoved);
-		verifyAndCopyClones();
-	}
-	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		for (String name: shareholders.keySet()) {
-			sb.append(shareholders.get(name));
+		sb.append("timestamp: ");
+		sb.append(TIMESTAMP_FORMATTER.format(timestamp.getTime()));
+		sb.append("\n");
+		for (Shareholder shareholder: shareholders) {
+			sb.append(shareholder.toString());
 			sb.append("\n");
 		}
 		return sb.toString();
 	}
-	
-	private void resetClones() {
-		shareholdersClone = new HashMap<String, Shareholder>(shareholders);
-	}
 
-	private void verifyAndCopyClones() {
-		verifyClones();
-		shareholders = shareholdersClone;
-	}
-
-	private void verifyClones() {
+	private static void verifyShareholders(List<Shareholder> shareholders) {
 		double totalShare = 0;
-		for (String shareholderName: shareholdersClone.keySet()) {
-			totalShare += shareholdersClone.get(shareholderName).getShare();
+		Set<String> names = new HashSet<String>();
+		for (Shareholder shareholder: shareholders) {
+			totalShare += shareholder.getShare();
+			if (!names.add(shareholder.getName())) {
+				throw new IllegalArgumentException("Duplicated shareholder's name: " + shareholder.getName());
+			}
 		}
-		assertEquals(100, totalShare, 0.005);
+		same(100, totalShare);
 	}
-
-	private void addShareholders(List<Shareholder> toBeAdded) {
-		for (Shareholder shareholder: toBeAdded) {
-			verifyShareholderDoesNotAlreadyExist(shareholder);
-			shareholdersClone.put(shareholder.getName(), shareholder);
-		}
-	}
-
-	private void updateShareholders(List<Shareholder> toBeUpdated) {
-		for (Shareholder shareholder: toBeUpdated) {
-			verifyShareholderDoesAlreadyExist(shareholder);
-			shareholdersClone.put(shareholder.getName(), shareholder);
-		}
-	}
-
-	private void removeShareholders(List<Shareholder> toBeRemoved) {
-		for (Shareholder shareholder: toBeRemoved) {
-			verifyShareholderDoesAlreadyExist(shareholder);
-			shareholdersClone.remove(shareholder.getName());
-		}
-		
-	}
-
-	private void verifyShareholderDoesNotAlreadyExist(Shareholder shareholder) {
-		if (shareholdersClone.get(shareholder.getName())!=null) {
-			throw new IllegalArgumentException("shareholder already exists: " + shareholder.toString());
-		}
-	}
-	
-	private void verifyShareholderDoesAlreadyExist(Shareholder shareholder) {
-		if (shareholdersClone.get(shareholder.getName())==null) {
-			throw new IllegalArgumentException("shareholder already exists: " + shareholder.toString());
-		}
-	}
-	
-	
 
 }

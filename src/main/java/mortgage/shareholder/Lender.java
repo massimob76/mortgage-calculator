@@ -1,15 +1,11 @@
 package mortgage.shareholder;
 
-import java.text.SimpleDateFormat;
-
 import mortgage.helper.Calculator;
 
 import static mortgage.helper.Comparison.same;
 import static org.junit.Assert.assertTrue;
 
 public class Lender implements Shareholder {
-	
-	private static final SimpleDateFormat TIMESTAMP_FORMATTER = new SimpleDateFormat("MMMMMMMMMMMM d, yyyy");
 	
 	private final String name;
 	private float annualInterestRate;
