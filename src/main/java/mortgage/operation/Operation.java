@@ -6,6 +6,6 @@ import mortgage.shareholder.Shareholder;
 
 public interface Operation {
 	
-	public List<Shareholder> applyTo(List<Shareholder> shareholdersBefore);
+	public List<Shareholder> applyTo(List<Shareholder> shareholdersBeforeOp);
 
 }
