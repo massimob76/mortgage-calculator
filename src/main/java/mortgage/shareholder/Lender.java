@@ -29,10 +29,12 @@ public class Lender implements Shareholder {
 		this.annualInterestRate = annualInterestRate;
 	}
 	
-	public void payIn(double amount) {
+	public double payInAndReturnSoldShares(double amount) {
 		if (this.borrowing >= amount) {
-			this.share = calculateUpdatedShares(amount, borrowing);
+			double soldShares = calculateSoldShares(amount);
+			this.share -= soldShares;
 			this.borrowing -= amount;
+			return soldShares;
 		} else {
 			throw new IllegalPayInAmount("amount cannot be higher than residual borrowing", amount, borrowing);
 		}
@@ -74,9 +76,8 @@ public class Lender implements Shareholder {
 		return false;
 	}
 	
-	private double calculateUpdatedShares(double paidInAmount, double borrowing) {
-		double updatedShare = share * ( 1 - paidInAmount / borrowing);
-		return updatedShare;
+	private double calculateSoldShares(double paidInAmount) {
+		return paidInAmount * share / borrowing;
 	}
 	
 //	private double calculateUpdatedBorrowing(Calendar updatedTimestamp) {

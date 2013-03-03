@@ -1,11 +1,9 @@
 package mortgage.operation;
 
-import java.util.List;
-
-import mortgage.shareholder.Shareholder;
+import mortgage.shareholder.Shareholders;
 
 public interface Operation {
 	
-	public List<Shareholder> applyTo(List<Shareholder> shareholdersBeforeOp);
+	public void applyTo(Shareholders shareholders);
 
 }

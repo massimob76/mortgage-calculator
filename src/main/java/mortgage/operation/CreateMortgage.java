@@ -1,21 +1,27 @@
 package mortgage.operation;
 
-import java.util.List;
-
 import mortgage.shareholder.Lender;
 import mortgage.shareholder.Shareholder;
+import mortgage.shareholder.Shareholders;
 
 public class CreateMortgage implements Operation {
 	
-	private final List<Shareholder> shareholders;
+	private final Shareholder[] shareholders;
 	
-	public CreateMortgage(List<Shareholder> shareholders) {
+	public CreateMortgage(Shareholder... shareholders) {
 		this.shareholders = shareholders;
 	}
 	
-	public List<Shareholder> applyTo(List<Shareholder> emptyList) {
-		verifyThereIsAtLeastOneLender();
-		return this.shareholders;
+	public void applyTo(Shareholders shareholders) {
+		if (shareholders.isEmpty()) {
+			verifyThereIsAtLeastOneLender();
+			for (Shareholder shareholder: this.shareholders) {
+				shareholders.add(shareholder);
+			}
+		} else {
+			throw new IllegalArgumentException("the shareholder obj should be empty: " + shareholders);
+		}
+
 	}
 
 	private void verifyThereIsAtLeastOneLender() {

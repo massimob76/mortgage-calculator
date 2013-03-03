@@ -77,5 +77,24 @@ public class ShareholdersTest {
 		iut.add(new Borrower("Massimo", 20.00));
 		iut.getLender("Massimo");
 	}
+	
+	@Test
+	public void shareholderObjectedHavingSameShareholderShouldBeConsideredEqual() {
+		iut.add(new Borrower("Massimo", 20.00));
+		Shareholders expected = new Shareholders();
+		expected.add(new Borrower("Massimo", 20.00));
+		assertEquals(expected, iut);
+	}
+	
+	@Test
+	public void isEmptyReturnsTrueWhenTheContainerIsEmpty() {
+		assertTrue(iut.isEmpty());
+	}
+	
+	@Test
+	public void isEmptyReturnsFalseWhenThereIsAtLeastOneShareholder() {
+		iut.add(new Borrower("Massimo", 20.00));
+		assertFalse(iut.isEmpty());
+	}
 
 }

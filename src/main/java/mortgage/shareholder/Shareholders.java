@@ -7,22 +7,22 @@ import java.util.Map;
 
 public class Shareholders {
 	
-	private Map<String, Shareholder> shareholders = new HashMap<String, Shareholder>();
+	private Map<String, Shareholder> holders = new HashMap<String, Shareholder>();
 
 	public void add(Shareholder shareholder) {
-		if (shareholders.get(shareholder.getName()) == null) {
+		if (holders.get(shareholder.getName()) == null) {
 			addIt(shareholder);
 		} else {
 			
 			throw new IllegalArgumentException("Shareholder with the same name is already existing!"
-					+ " shareholder: " + shareholders.get(shareholder.getName())
+					+ " shareholder: " + holders.get(shareholder.getName())
 					+ " trying to add: " + shareholder);
 		}
 		
 	}
 	
 	public void modify(Shareholder shareholder) {
-		if (shareholders.get(shareholder.getName()) == null) {
+		if (holders.get(shareholder.getName()) == null) {
 			throw new IllegalArgumentException("Shareholder with name: " + shareholder.getName() + " does not exists!");
 			
 		} else {
@@ -32,7 +32,7 @@ public class Shareholders {
 	}
 	
 	public Borrower getBorrower(String string) {
-		Shareholder shareholder = shareholders.get(string);
+		Shareholder shareholder = holders.get(string);
 		if (shareholder instanceof Borrower) {
 			return (Borrower)shareholder;
 		} else {
@@ -42,23 +42,37 @@ public class Shareholders {
 	
 	public List<Shareholder> getAll() {
 		List<Shareholder> retVal = new ArrayList<Shareholder>();
-		for (String name: shareholders.keySet()) {
-			retVal.add(shareholders.get(name));
+		for (String name: holders.keySet()) {
+			retVal.add(holders.get(name));
 		}
 		return retVal;
 	}
 	
 	private void addIt(Shareholder shareholder) {
-		shareholders.put(shareholder.getName(), shareholder);
+		holders.put(shareholder.getName(), shareholder);
 	}
 
 	public Lender getLender(String string) {
-		Shareholder shareholder = shareholders.get(string);
+		Shareholder shareholder = holders.get(string);
 		if (shareholder instanceof Lender) {
 			return (Lender)shareholder;
 		} else {
 			throw new IllegalArgumentException("This is not a Lender: " + shareholder);
 		}
+	}
+	
+	@Override
+	public boolean equals(Object shareholders) {
+		return (shareholders instanceof Shareholders) && this.holders.equals(((Shareholders)shareholders).holders);
+	}
+	
+	@Override
+	public String toString() {
+		return this.holders.toString();
+	}
+
+	public boolean isEmpty() {
+		return holders.isEmpty();
 	}
 
 }

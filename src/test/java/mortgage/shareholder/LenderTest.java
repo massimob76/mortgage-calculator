@@ -1,5 +1,7 @@
 package mortgage.shareholder;
 
+import static mortgage.helper.Comparison.DOUBLE_TOLERANCE;
+
 import static org.junit.Assert.*;
 
 import java.text.ParseException;
@@ -57,7 +59,9 @@ public class LenderTest {
 		Lender lender = new Lender("my bank", 1.00f, 10000, 100);
 		
 		Lender expected = new Lender("my bank", 1.00f, 5000, 50);
-		lender.payIn(5000);
+		double expectedSoldShares = 50d;
+		double actualSoldShares = lender.payInAndReturnSoldShares(5000);
+		assertEquals(expectedSoldShares, actualSoldShares, DOUBLE_TOLERANCE);
 		assertEquals(expected, lender);
 	}
 	
@@ -67,8 +71,11 @@ public class LenderTest {
 		
 		Lender expected = new Lender("my bank", 20.00f, 100712.67, 99.02);
 		lender = lender.moveTimeline(31);
-		lender.payIn(1000);
+		double expectedSoldShares = 0.98d;
+		double actualSoldShares = lender.payInAndReturnSoldShares(1000);
+		assertEquals(expectedSoldShares, actualSoldShares, DOUBLE_TOLERANCE);
 		assertEquals(expected, lender);
+		
 		
 		expected = new Lender("my bank", 20.00f, 102325.37, 99.02);
 		lender = lender.moveTimeline(29);
@@ -81,7 +88,9 @@ public class LenderTest {
 		
 		expected = new Lender("my bank", 30.00f, 105674.98, 98.09);
 		lender = lender.moveTimeline(30);
-		lender.payIn(1000);
+		expectedSoldShares = 0.93d;
+		actualSoldShares = lender.payInAndReturnSoldShares(1000);
+		assertEquals(expectedSoldShares, actualSoldShares, DOUBLE_TOLERANCE);
 		assertEquals(expected, lender);		
 	}
 	

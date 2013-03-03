@@ -5,15 +5,15 @@ import static mortgage.helper.Comparison.same;
 public class Borrower implements Shareholder {
 	
 	private final String name;
-	private final double share;
+	private double share;
 	
 	public Borrower(String name, double share) {
 		this.name = name;
 		this.share = share;
 	}
 	
-	public Borrower addShare(double share) {
-		return new Borrower(this.name, this.share + share);
+	public void addShare(double share) {
+		this.share += share;
 	}
 	
 	public String getName() {

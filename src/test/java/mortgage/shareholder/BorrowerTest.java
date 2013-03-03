@@ -12,8 +12,8 @@ public class BorrowerTest {
 	public void addShareAddsCorrectAmountOfShares() {
 		Borrower borrower = new Borrower("me", 10.00);
 		Borrower expected = new Borrower("me", 30.00);
-		Borrower actual = borrower.addShare(20.00);
-		assertEquals(expected, actual);
+		borrower.addShare(20.00);
+		assertEquals(expected, borrower);
 	}
 	
 	@Test
