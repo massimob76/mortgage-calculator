@@ -1,0 +1,49 @@
+{
+  "timeline":[
+    {
+      "timestamp":"-----",
+      "operation":{
+        "name":"initialize",
+        "shareholders":[
+          {
+            "type":"borrower",
+            "name":"Massimo",
+            "share":"----"
+          },
+          {
+            "type":"lender",
+            "name":"Yorkshire BS",
+            "annualInterestRate":"----",
+            "borrowing":"----",
+            "share":"----"
+          }
+          
+        ]
+        
+      }
+      
+    },
+    {
+      "timestamp":"-----",
+      "operations":[
+        {
+          "name":"payIn",
+          "from":"Massimo",
+          "to":"Yorkshire BS",
+          "amount":"777777"
+        },
+        {
+          "name":"addShareholder",
+          "shareholder":{
+            "type":"borrower",
+            "name":"Paula"
+          }
+          
+        }
+        
+      ]
+      
+    }
+    
+  ]
+}
