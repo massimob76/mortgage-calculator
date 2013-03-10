@@ -2,10 +2,15 @@ package mortgage.shareholder;
 
 import static mortgage.helper.Comparison.same;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+
 public class Borrower implements Shareholder {
 	
 	private final String name;
 	private double share;
+	
+	private static Gson gson = new Gson();
 	
 	public Borrower(String name, double share) {
 		this.name = name;
@@ -24,6 +29,10 @@ public class Borrower implements Shareholder {
 		return share;
 	}
 	
+	public static Borrower fromJson(JsonElement jsonElement) {
+		return gson.fromJson(jsonElement, Borrower.class);
+	}
+	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -38,7 +47,7 @@ public class Borrower implements Shareholder {
 	public boolean equals(Object o) {
 		if (o instanceof Borrower) {
 			Borrower borrower = (Borrower)o;
-			return (borrower.name == this.name && same(borrower.share, this.share));
+			return (borrower.name.equals(name) && same(borrower.share, this.share));
 		}
 		return false;
 	}
